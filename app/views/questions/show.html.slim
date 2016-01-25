@@ -1,0 +1,19 @@
+div.notice = notice
+h2 Question
+p
+  b Title:
+  = @question.title
+p
+  b Body:
+  = @question.body
+h2 Answers:
+= render @question.answers
+h2 Add new answer:
+= form_for([@question, @question.answers.new]) do |f|
+  div.field
+    = f.label :body
+    = f.text_area :body, size: "25x5"
+  div.actions
+    = f.submit "Add new answer"
+
+= link_to 'All questions', questions_path
