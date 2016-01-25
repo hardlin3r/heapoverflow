@@ -1,4 +1,8 @@
 div.answer
   p
     b Body:
-    = answer.body
+    span
+      = answer.body
+    span
+      - if current_user && current_user.author_of?(answer)
+        = link_to "Delete", [@question, answer], method: :delete

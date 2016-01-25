@@ -1,4 +1,3 @@
-div.notice = notice
 h2 Question
 p
   b Title:
@@ -17,3 +16,5 @@ h2 Add new answer:
     = f.submit "Add new answer"
 
 = link_to 'All questions', questions_path
+- if current_user && current_user.author_of?(@question)
+  = link_to 'Delete this question', question_path(@question), method: :delete
