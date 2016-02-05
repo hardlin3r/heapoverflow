@@ -8,21 +8,22 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'POST #create' do
 
+    sign_in_user
+
     context 'with valid attributes' do
 
-      sign_in_user
 
       it 'saves the new answer with correct question' do
-        expect { post :create, answer: attributes_for(:answer), question_id: question }.to change(question.answers, :count).by(1)
+        expect { post :create, answer: attributes_for(:answer), question_id: question, format: :js }.to change(question.answers, :count).by(1)
       end
 
       it 'saves the new answer with correct owner' do
-        expect { post :create, answer: attributes_for(:answer), question_id: question }.to change(@user.answers, :count).by(1)
+        expect { post :create, answer: attributes_for(:answer), question_id: question, format: :js }.to change(@user.answers, :count).by(1)
       end
 
-      it 'redirects to question view' do
-        post :create, answer: attributes_for(:answer), question_id: question
-        expect(response).to redirect_to question_path(question)
+      it 'render create template' do
+        post :create, answer: attributes_for(:answer), question_id: question, format: :js
+        expect(response).to render_template 'create'
       end
 
     end
@@ -30,12 +31,12 @@ RSpec.describe AnswersController, type: :controller do
     context 'with invalid attributes' do
 
       it 'does not save the answer' do
-        expect { post :create, answer: { body: nil }, question_id: question }.to_not change(Answer, :count)
+        expect { post :create, answer: { body: nil }, question_id: question, format: :js }.to_not change(Answer, :count)
       end
 
-      it 'redirects to question' do
-        post :create, answer: { body: nil }, question_id: question
-        expect(response).to redirect_to new_user_session_url
+      it 'render create template' do
+        post :create, answer: { body: nil }, question_id: question, format: :js
+        expect(response).to render_template 'create'
       end
 
     end

@@ -1,19 +1,9 @@
-- if current_user
-  p
-    = link_to 'Sign out', destroy_user_session_url, method: :delete
-- else
-  p
-    = link_to 'Sign in', new_user_session_url
-  p
-    = link_to 'Sign up', new_user_registration_url
-h1 Listing questions
-table
-  tr
-    th Title
-    th Body
+h1 Questions
+hr
+table.question-index-table
   - @questions.each do |question|
     tr
       td = question.title
-      td = question.body
       td = link_to "Show", question
+hr
 = link_to 'Ask question', new_question_path

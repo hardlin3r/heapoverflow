@@ -50,6 +50,8 @@ group :test, :development do
   # Call 'byebug' anywhere in the code to stop execution and get a
   # debugger console
   gem 'byebug'
+  gem 'selenium-webdriver'
+  gem 'database_cleaner'
 end
 
 group :test do

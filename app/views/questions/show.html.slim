@@ -1,20 +1,22 @@
-h2 Question
-p
-  b Title:
-  = @question.title
-p
-  b Body:
+h1 = @question.title
+hr
+div.question-show
   = @question.body
-h2 Answers:
-= render @question.answers
-h2 Add new answer:
-= form_for([@question, @question.answers.new]) do |f|
-  div.field
-    = f.label :body
-    = f.text_area :body, size: "25x5"
-  div.actions
-    = f.submit "Add new answer"
-
-= link_to 'All questions', questions_path
 - if current_user && current_user.author_of?(@question)
   = link_to 'Delete this question', question_path(@question), method: :delete
+hr
+h2
+  = "#{@question.answers.count} Answers:"
+div.answers
+  - @question.answers.each do |answer|
+    = render 'answers/answer', answer: answer
+h2 Add new answer:
+= form_for([@question, @question.answers.new], remote: true) do |f|
+  div.field.form-group
+    = f.label :body, "Your answer"
+    = f.text_area :body, size: "25x5", class: 'form-control'
+  div.actions
+    = f.submit "Create", class: 'btn btn-default'
+
+= link_to 'All questions', questions_path
+

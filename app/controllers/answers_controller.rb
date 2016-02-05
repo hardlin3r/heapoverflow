@@ -1,15 +1,12 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :load_question, only: [:create, :destroy]
+
   def create
     @answer = @question.answers.new(answer_params)
     @answer.user = current_user
-    if @answer.save
-      redirect_to @question, notice: "Answer successfully added!"
-    else
-      redirect_to @question, alert: "Unable to add an answer!"
-    end
-  end
+    @answer.save
+ end
 
   def destroy
     @answer = Answer.find(params[:id])
