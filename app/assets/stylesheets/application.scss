@@ -13,3 +13,19 @@
 */
 @import "bootstrap-sprockets";
 @import "bootstrap";
+
+.question-index-table th, .question-index-table td {
+  padding: 5px;
+}
+.question-index-table {
+  width: 100%;
+}
+h1 {
+  font-size: 24px;
+}
+h2 {
+  font-size: 16px;
+}
+.answer {
+  margin-bottom: 20px;
+}

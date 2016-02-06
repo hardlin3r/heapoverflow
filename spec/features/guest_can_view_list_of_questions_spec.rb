@@ -12,7 +12,6 @@ I want to view questions
     visit questions_url
     question_list.each do |q|
       expect(page).to have_content q.title
-      expect(page).to have_content q.body
     end
   end
 end
