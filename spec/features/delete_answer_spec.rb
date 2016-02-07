@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative 'feature_helper'
 
 feature 'delete answer', %q{
 As an author
@@ -8,11 +8,10 @@ I want to delete my answer
   given!(:answer) { create(:answer) }
   given(:user) { create(:user) }
 
-  scenario 'author deletes answer' do
+  scenario 'author deletes answer', js: true do
     sign_in(answer.user)
-    visit question_url(answer.question)
+    visit question_path(answer.question)
     click_on 'Delete'
-    expect(page).to have_content 'Your answer was deleted successfully'
     expect(page).to_not have_content answer.body
   end
 

@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative 'feature_helper'
 
 feature 'User can create an answer to the question', %q{
 As an authenticated User
@@ -25,6 +25,13 @@ I want to create an answer to the question
     fill_in 'Your answer', with: answer_text
     click_on 'Create'
     expect(page).to have_content 'You need to sign in or sign up before continuing.'
- end
+  end
+
+  scenario 'User tries to create invalid answer', js: true do
+    sign_in(user)
+    visit question_path(question)
+    click_on 'Create'
+    expect(page).to have_content 'Body is too short (minimum is 10 characters)'
+  end
 
 end

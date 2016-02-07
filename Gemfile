@@ -25,6 +25,7 @@ gem 'devise'
 gem 'slim-rails'
 gem 'bootstrap-sass'
 gem 'sprockets-rails'
+gem 'jquery-turbolinks'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -50,8 +51,8 @@ group :test, :development do
   # Call 'byebug' anywhere in the code to stop execution and get a
   # debugger console
   gem 'byebug'
-  gem 'selenium-webdriver'
   gem 'database_cleaner'
+  gem 'capybara-webkit'
 end
 
 group :test do

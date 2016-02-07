@@ -1,0 +1,21 @@
+h1 = @question.title
+hr
+div.question-show
+  = @question.body
+  - if current_user && current_user.author_of?(@question)
+    p= link_to 'Delete this question', question_path(@question), method: :delete, remote: true
+    p= link_to 'Edit this question', '', class: 'edit-question-link', data: { question_id: @question.id }
+    p
+      = form_for @question, remote: true, html: { id: "edit-question-#{@question.id}" } do |f|
+        div.field.form-group
+          = f.label :title
+          = f.text_field :title, class: 'form-control'
+        div.field.form-group
+          = f.label :body, 'Question'
+          .question-errors
+          br
+          = f.text_area :body, size: "25x3", class: 'form-control'
+        div.actions
+          = f.submit 'Save', class: 'btn btn-default'
+
+hr

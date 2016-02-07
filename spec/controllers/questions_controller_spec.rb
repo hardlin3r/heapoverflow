@@ -98,31 +98,31 @@ describe QuestionsController, type: :controller do
   describe 'PATCH #update' do
 
     sign_in_user
-
+    let(:question) { create(:question, user_id: @user.id)}
     context 'valid attributes' do
 
       it 'assigns requested queston to @question' do
-        patch :update, id: question, question: attributes_for(:question)
+        patch :update, id: question, question: attributes_for(:question), format: :js
         expect(assigns(:question)).to eq question
       end
 
       it 'changes question attributes' do
-        patch :update, id: question, question: { title: "new super puper title", body: "new super puper body" }
+        patch :update, id: question, question: { title: "new super puper title", body: "new super puper body" }, format: :js
         question.reload
         expect(question.title).to eq "new super puper title"
         expect(question.body).to eq "new super puper body"
       end
 
-      it 'redirects to the updated question' do
-        patch :update, id: question, question: attributes_for(:question)
-        expect(response).to redirect_to question
+      it 'render update template' do
+        patch :update, id: question, question: attributes_for(:question), format: :js
+        expect(response).to render_template :update
       end
 
     end
 
     context 'invalid attributes' do
 
-      before { patch :update, id: question, question: { title: "new super puper title", body: nil} }
+      before { patch :update, id: question, question: { title: "new super puper title", body: nil}, format: :js }
 
       it 'does not change question attributes' do
         title = question.title
@@ -130,10 +130,6 @@ describe QuestionsController, type: :controller do
         question.reload
         expect(question.title).to eq title
         expect(question.body).to eq body
-      end
-
-      it 're-renders edit view' do
-        expect(response).to render_template :edit
       end
 
     end

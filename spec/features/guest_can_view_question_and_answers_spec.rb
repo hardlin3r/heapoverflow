@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative 'feature_helper'
 
 feature 'Guest can view question and answers to it', %q{
   As a Guest

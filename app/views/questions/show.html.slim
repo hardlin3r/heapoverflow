@@ -1,19 +1,13 @@
-h1 = @question.title
-hr
-div.question-show
-  = @question.body
-- if current_user && current_user.author_of?(@question)
-  = link_to 'Delete this question', question_path(@question), method: :delete
-hr
-h2
+= render 'question'
+h2.col-md-10.col-md-offset-2#answers_count
   = "#{@question.answers.count} Answers:"
 div.answers
-  - @question.answers.each do |answer|
-    = render 'answers/answer', answer: answer
+  = render 'answers/answers'
 h2 Add new answer:
 = form_for([@question, @question.answers.new], remote: true) do |f|
   div.field.form-group
     = f.label :body, "Your answer"
+    .answer-errors
     = f.text_area :body, size: "25x5", class: 'form-control'
   div.actions
     = f.submit "Create", class: 'btn btn-default'

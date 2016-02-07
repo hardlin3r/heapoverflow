@@ -3,7 +3,9 @@ Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
   resources :questions do
-    resources :answers, only: [:create, :destroy]
+    resources :answers, only: [:create, :destroy, :update] do
+      patch :set_best, on: :member
+    end
   end
   root to: "questions#index"
   # You can have the root of your site routed with "root"
