@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       patch :set_best, on: :member
     end
   end
+  resources :attachments, only: :destroy
   root to: "questions#index"
   # You can have the root of your site routed with "root"
   # root 'welcome#index'

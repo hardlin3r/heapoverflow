@@ -1,30 +1,36 @@
 div id="answer-#{answer.id}"
-  .row
-    .col-md-2.vote
-      -if current_user && current_user.author_of?(answer.question)
-        -if answer.best
-          = link_to 'Best answer', set_best_question_answer_url(@question, answer), remote: true, method: :patch
+  -if answer.persisted?
+    .row
+      .col-md-2.vote
+        -if current_user && current_user.author_of?(answer.question)
+          -if answer.best
+            = link_to 'Best answer', set_best_question_answer_url(@question, answer), remote: true, method: :patch
+          -else
+            = link_to 'Accept answer', set_best_question_answer_url(@question, answer), remote: true, method: :patch
         -else
-          = link_to 'Accept answer', set_best_question_answer_url(@question.id, answer.id), remote: true, method: :patch
-      -else
-        -if answer.best
-          span class="glyphicon glyphicon-ok best-answer" aria-hidden="true"
-    .col-md-10.well id="the-answer-body-#{answer.id}"
-      = answer.body
-  .row
-    .col-md-10.col-sm-offset-2
-      div
-        - if current_user && current_user.author_of?(answer)
-          p= link_to "Delete", [@question, answer], method: :delete, remote: true
-          p= link_to "Edit", '', class: 'edit-answer-link', data: { answer_id: answer.id }
-          p
-            = form_for [@question, answer], remote: true, html: { id: "edit-answer-#{answer.id}" }, namespace: answer.id do |f|
-              div
-                = f.label :body, 'Answer'
-              .answer-errors
-              div
-                = f.text_area :body, size: "25x3", class: "form-control"
-              div
-                = f.submit 'Save', class: 'btn btn-default'
+          -if answer.best
+            span class="glyphicon glyphicon-ok best-answer" aria-hidden="true"
+      .col-md-10.well id="the-answer-body-#{answer.id}"
+        = answer.body
+    .row
+      .col-md-10.col-sm-offset-2
+        ul
+          - answer.attachments.each do |a|
+            li id="attachment-#{a.id}" class="attachment"
+              = link_to a.file.identifier, a.file.url
+              = link_to "Remove attachment", attachment_path(a), method: :delete, remote: true
+        div
+          - if current_user && current_user.author_of?(answer)
+            p= link_to "Delete", [@question, answer], method: :delete, remote: true
+            p= link_to "Edit", '', class: 'edit-answer-link', data: { answer_id: answer.id }
+            p
+              = form_for [@question, answer], remote: true, html: { id: "edit-answer-#{answer.id}" }, namespace: answer.id do |f|
+                div
+                  = f.label :body, 'Answer'
+                .answer-errors
+                div
+                  = f.text_area :body, size: "25x3", class: "form-control"
+                div
+                  = f.submit 'Save', class: 'btn btn-default'
 
 

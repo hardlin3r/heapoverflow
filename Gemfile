@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-
+ruby '2.2.4'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.5'
 # Use postgresql database for Active Record
@@ -26,6 +26,9 @@ gem 'slim-rails'
 gem 'bootstrap-sass'
 gem 'sprockets-rails'
 gem 'jquery-turbolinks'
+gem 'carrierwave'
+gem 'remotipart'
+gem 'cocoon'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

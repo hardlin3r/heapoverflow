@@ -2,12 +2,17 @@
 h2.col-md-10.col-md-offset-2#answers_count
   = "#{@question.answers.count} Answers:"
 div.answers
-  = render 'answers/answers'
+  = render @question.answers
 h2 Add new answer:
-= form_for([@question, @question.answers.new], remote: true) do |f|
+= form_for([@question, @answer], remote: true) do |f|
   div.field.form-group
     = f.label :body, "Your answer"
-    .answer-errors
+  div.field.form-group
+    = f.fields_for :attachments do |a|
+      = render 'attachments/attachment_fields', f: a
+    .links
+      = link_to_add_association 'add attachment', f, :attachments, partial: 'attachments/attachment_fields'
+  .answer-errors
     = f.text_area :body, size: "25x5", class: 'form-control'
   div.actions
     = f.submit "Create", class: 'btn btn-default'
