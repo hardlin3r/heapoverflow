@@ -1,7 +1,8 @@
 class Answer < ActiveRecord::Base
+  include Votable
+  include Attachable
   belongs_to :question
   belongs_to :user
-  has_many :attachments, as: :attachable
 
   validates :body, presence: true, length: { minimum: 10, maximum: 8000 }
   validates :question_id, :user_id, presence: true, numericality: true
@@ -14,6 +15,4 @@ class Answer < ActiveRecord::Base
       best ? update!(best: false) : update!(best: true)
     end
   end
-
-  accepts_nested_attributes_for :attachments, reject_if: :all_blank
 end

@@ -1,27 +1,46 @@
-h1 = @question.title
-hr
-div.question-show
-  = @question.body
-  p Attachments:
-  ul
-    - @question.attachments.each do |a|
-      li id="attachment-#{a.id}" class="attachment"
-        = link_to a.file.identifier, a.file.url
-        = link_to "Remove attachment", attachment_path(a), method: :delete, remote: true
-  - if current_user && current_user.author_of?(@question)
-    p= link_to 'Delete this question', question_path(@question), method: :delete
-    p= link_to 'Edit this question', '', class: 'edit-question-link', data: { question_id: @question.id }
-    p
-      = form_for @question, remote: true, html: { id: "edit-question-#{@question.id}" } do |f|
-        div.field.form-group
-          = f.label :title
-          = f.text_field :title, class: 'form-control'
-        div.field.form-group
-          = f.label :body, 'Question'
-          .question-errors
-          br
-          = f.text_area :body, size: "25x3", class: 'form-control'
-        div.actions
-          = f.submit 'Save', class: 'btn btn-default'
+div#question
+  div.row
+    .col-md-10.col-md-offset-2
+      h1 = @question.title
+  hr
+  div.row
+    div.col-md-2.vote_question
+      ul.list-group
+        li.list-group-item
+          span Rating: #{@question.votes.rating}
+        -if current_user
+          -unless current_user.author_of?(@question)
+            -if !current_user.voted_for?(@question)
+              li.list-group-item
+                =link_to 'Vote up', upvote_question_path(@question), remote: true, method: :patch, data: { format: :json }, class: "btn btn-info vote-up"
+              li.list-group-item
+                =link_to 'Vote down', downvote_question_path(@question), remote: true, method: :patch, data: { format: :json }, class: "btn btn-info vote-down"
+            -else
+              li.list-group-item
+                =link_to 'Unvote', unvote_question_path(@question), remote: true, method: :patch, data: { format: :json }, class: "btn btn-info vote-unvote"
+    div.question-show.col-md-10
+      = @question.body
+      -if @question.attachments.size > 0
+        p Attachments:
+      ul
+        - @question.attachments.each do |a|
+          li id="attachment-#{a.id}" class="attachment"
+            = link_to a.file.identifier, a.file.url
+            = link_to "Remove attachment", attachment_path(a), method: :delete, remote: true
+      - if current_user && current_user.author_of?(@question)
+        p= link_to 'Delete this question', question_path(@question), method: :delete
+        p= link_to 'Edit this question', '', class: 'edit-question-link', data: { question_id: @question.id }
+        p
+          = form_for @question, remote: true, html: { id: "edit-question-#{@question.id}" } do |f|
+            div.field.form-group
+              = f.label :title
+              = f.text_field :title, class: 'form-control'
+            div.field.form-group
+              = f.label :body, 'Question'
+              .question-errors
+              br
+              = f.text_area :body, size: "25x3", class: 'form-control'
+            div.actions
+              = f.submit 'Save', class: 'btn btn-default'
 
 hr

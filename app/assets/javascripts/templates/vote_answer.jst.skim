@@ -1,0 +1,29 @@
+- if (not (@answer.authenticated and @answer.author_of_question)) and @answer.best
+  li class="list-group-item"
+    span class="glyphicon glyphicon-ok best-answer" aria-hidden="true"
+li class='list-group-item'
+  span
+    ="Rating: #{@answer.rating}"
+- if not @answer.author_of
+  - if @answer.voted_for
+    li class='list-group-item'
+      a data-format="json" class="btn btn-info vote-unvote" data-remote="true" rel="nofollow" data-method="patch" href="#{@answer.unvote_url}"
+        |Unvote
+  - else
+    li class='list-group-item'
+      a data-format="json" class="btn btn-info vote-upvote" data-remote="true" rel="nofollow" data-method="patch" href="#{@answer.upvote_url}"
+        |Vote up
+    li class='list-group-item'
+      a data-format="json" class="btn btn-info vote-downvote" data-remote="true" rel="nofollow" data-method="patch" href="#{@answer.downvote_url}"
+        |Vote down
+- if @answer.author_of_question
+  - if @answer.best
+    li class='list-group-item'
+      a class="btn btn-info" data-remote="true" rel="nofollow" data-method="patch" href="#{@answer.set_best_url}"
+        |Best answer
+  - else
+    li class='list-group-item'
+      a class="btn btn-info" data-remote="true" rel="nofollow" data-method="patch" href="#{@answer.set_best_url}"
+        |Accept answer
+  
+  

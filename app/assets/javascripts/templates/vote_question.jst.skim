@@ -1,0 +1,15 @@
+li class='list-group-item'
+  span
+    ="Rating: #{@question.rating}"
+- if not @question.author_of_question
+  - if @question.voted_for
+    li class='list-group-item'
+      a data-format="json" class="btn btn-info vote-unvote" data-remote="true" rel="nofollow" data-method="patch" href="#{@question.unvote_url}"
+        |Unvote
+  - else
+    li class='list-group-item'
+      a data-format="json" class="btn btn-info vote-upvote" data-remote="true" rel="nofollow" data-method="patch" href="#{@question.upvote_url}"
+        |Vote up
+    li class='list-group-item'
+      a data-format="json" class="btn btn-info vote-downvote" data-remote="true" rel="nofollow" data-method="patch" href="#{@question.downvote_url}"
+        |Vote down

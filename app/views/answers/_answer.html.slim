@@ -2,14 +2,29 @@ div id="answer-#{answer.id}"
   -if answer.persisted?
     .row
       .col-md-2.vote
-        -if current_user && current_user.author_of?(answer.question)
-          -if answer.best
-            = link_to 'Best answer', set_best_question_answer_url(@question, answer), remote: true, method: :patch
-          -else
-            = link_to 'Accept answer', set_best_question_answer_url(@question, answer), remote: true, method: :patch
-        -else
-          -if answer.best
-            span class="glyphicon glyphicon-ok best-answer" aria-hidden="true"
+        ul.list-group
+          -if !(current_user && current_user.author_of?(answer.question)) && answer.best
+            li.list-group-item
+              span class="glyphicon glyphicon-ok best-answer" aria-hidden="true"
+          li.list-group-item
+            span Rating: #{answer.votes.rating}
+          -if current_user
+            -unless current_user.author_of?(answer)
+              -if !current_user.voted_for?(answer)
+                li.list-group-item
+                  =link_to 'Vote up', upvote_question_answer_path(@question, answer), remote: true, method: :patch, data: { format: :json }, class: "btn btn-info vote-up"
+                li.list-group-item
+                  =link_to 'Vote down', downvote_question_answer_path(@question, answer), remote: true, method: :patch, data: { format: :json }, class: "btn btn-info vote-down"
+              -else
+                li.list-group-item
+                  =link_to 'Unvote', unvote_question_answer_path(@question, answer), remote: true, method: :patch, data: { format: :json }, class: "btn btn-info vote-unvote"
+            -if current_user.author_of?(answer.question)
+              -if answer.best
+                li.list-group-item
+                  = link_to 'Best answer', set_best_question_answer_url(@question, answer), remote: true, method: :patch, class: "btn btn-info"
+              -else
+                li.list-group-item
+                  = link_to 'Accept answer', set_best_question_answer_url(@question, answer), remote: true, method: :patch, class: "btn btn-info"
       .col-md-10.well id="the-answer-body-#{answer.id}"
         = answer.body
     .row

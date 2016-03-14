@@ -1,4 +1,5 @@
-= render 'question'
+div id="question-#{@question.id}"
+  = render 'question'
 h2.col-md-10.col-md-offset-2#answers_count
   = "#{@question.answers.count} Answers:"
 div.answers
