@@ -23,6 +23,7 @@ class QuestionsController < ApplicationController
     @question = Question.new(question_params)
     @question.user = current_user
     if @question.save
+      PrivatePub.publish_to "/questions/new",{ question: @question, question_url: question_url(@question) }
       redirect_to @question, notice: "Your question was created successfully"
     else
       render :new, notice: "Title and cody should have length above 10 symbols!"

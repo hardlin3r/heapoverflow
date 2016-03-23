@@ -12,34 +12,41 @@ div id="answer-#{answer.id}"
             -unless current_user.author_of?(answer)
               -if !current_user.voted_for?(answer)
                 li.list-group-item
-                  =link_to 'Vote up', upvote_question_answer_path(@question, answer), remote: true, method: :patch, data: { format: :json }, class: "btn btn-info vote-up"
+                  =link_to 'Vote up', upvote_answer_path(answer), remote: true, method: :patch, data: { format: :json }, class: "btn btn-info vote-up"
                 li.list-group-item
-                  =link_to 'Vote down', downvote_question_answer_path(@question, answer), remote: true, method: :patch, data: { format: :json }, class: "btn btn-info vote-down"
+                  =link_to 'Vote down', downvote_answer_path(answer), remote: true, method: :patch, data: { format: :json }, class: "btn btn-info vote-down"
               -else
                 li.list-group-item
-                  =link_to 'Unvote', unvote_question_answer_path(@question, answer), remote: true, method: :patch, data: { format: :json }, class: "btn btn-info vote-unvote"
+                  =link_to 'Unvote', unvote_answer_path(answer), remote: true, method: :patch, data: { format: :json }, class: "btn btn-info vote-unvote"
             -if current_user.author_of?(answer.question)
               -if answer.best
                 li.list-group-item
-                  = link_to 'Best answer', set_best_question_answer_url(@question, answer), remote: true, method: :patch, class: "btn btn-info"
+                  = link_to 'Best answer', set_best_answer_url(answer), remote: true, method: :patch, class: "btn btn-info"
               -else
                 li.list-group-item
-                  = link_to 'Accept answer', set_best_question_answer_url(@question, answer), remote: true, method: :patch, class: "btn btn-info"
-      .col-md-10.well id="the-answer-body-#{answer.id}"
-        = answer.body
+                  = link_to 'Accept answer', set_best_answer_url(answer), remote: true, method: :patch, class: "btn btn-info"
+      .col-md-10 id="the-answer-body-#{answer.id}"
+        div.well
+          = answer.body
+        -if answer.comments.size > 0
+          h2
+            |Comments:
+          ul.list-group.answer-comments
+            =render answer.comments
     .row
-      .col-md-10.col-sm-offset-2
-        ul
-          - answer.attachments.each do |a|
-            li id="attachment-#{a.id}" class="attachment"
-              = link_to a.file.identifier, a.file.url
-              = link_to "Remove attachment", attachment_path(a), method: :delete, remote: true
+      .col-md-10.col-sm-offset-2.attachments
+        - if answer.attachments.size > 0
+          ul
+            - answer.attachments.each do |a|
+              li id="attachment-#{a.id}" class="attachment"
+                = link_to a.file.identifier, a.file.url
+                = link_to "Remove attachment", attachment_path(a), method: :delete, remote: true
         div
           - if current_user && current_user.author_of?(answer)
-            p= link_to "Delete", [@question, answer], method: :delete, remote: true
+            p= link_to "Delete", answer, method: :delete, remote: true
             p= link_to "Edit", '', class: 'edit-answer-link', data: { answer_id: answer.id }
             p
-              = form_for [@question, answer], remote: true, html: { id: "edit-answer-#{answer.id}" }, namespace: answer.id do |f|
+              = form_for answer, remote: true, html: { id: "edit-answer-#{answer.id}" }, namespace: answer.id do |f|
                 div
                   = f.label :body, 'Answer'
                 .answer-errors
@@ -47,5 +54,16 @@ div id="answer-#{answer.id}"
                   = f.text_area :body, size: "25x3", class: "form-control"
                 div
                   = f.submit 'Save', class: 'btn btn-default'
+          p= link_to "Add comment", '', class: 'add-comment-link', data: { answer_id: answer.id }
+    .row
+      div.col-md-4.col-md-offset-2
+        =form_for([answer, Comment.new],
+                  remote: true,
+                  html: { id: "create-comment-for-#{answer.id}", class: "comment-form" }) do |f|
+          div.form-group
+            =f.label :body, 'Comment:'
+            =f.text_area :body, size: "25x3", class: "form-control"
+          div.form-group
+            =f.submit 'Create comment', class: 'btn btn-default form-control'
 
-
+= subscribe_to "/questions/#{@answer.question.id}/answers/#{answer.id}/comments"

@@ -1,7 +1,7 @@
 class AnswersController < ApplicationController
   include Voted
   before_action :authenticate_user!
-  before_action :load_question, except: [:update]
+  before_action :load_question, only: [:create]
   before_action :load_answer, except: [:create]
 
   def create
@@ -22,7 +22,7 @@ class AnswersController < ApplicationController
   end
 
   def set_best
-    if current_user.author_of?(@question)
+    if current_user.author_of?(@answer.question)
       @answer.set_best
     end
   end

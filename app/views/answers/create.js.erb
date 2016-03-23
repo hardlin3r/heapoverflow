@@ -3,7 +3,9 @@
     $('.answer-errors').html('<%= j message %>');
   <% end %>
 <% else %>
-  $('.answers').append('<%= j render(@answer) %>');
+  <% publish_to "/questions/#{@question.id}/answers" do %>
+    $('.answers').append('<%= j render(@answer) %>');
+  <% end %>
   $('#answer_body').val('');
   $('#answers_count').text('<%= "#{@question.answers.count} Answers:" %>');
 <% end %>

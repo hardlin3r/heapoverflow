@@ -19,7 +19,12 @@ div#question
               li.list-group-item
                 =link_to 'Unvote', unvote_question_path(@question), remote: true, method: :patch, data: { format: :json }, class: "btn btn-info vote-unvote"
     div.question-show.col-md-10
-      = @question.body
+      p= @question.body
+      -if @question.comments.count > 0
+        h2
+          |Comments:
+        ul.list-group.question-comments
+          =render @question.comments
       -if @question.attachments.size > 0
         p Attachments:
       ul
@@ -42,5 +47,15 @@ div#question
               = f.text_area :body, size: "25x3", class: 'form-control'
             div.actions
               = f.submit 'Save', class: 'btn btn-default'
+      p= link_to 'Add comment', '', class: 'add-question-comment-link', data: { question_id: @question.id }
+      =form_for([@question, Comment.new],
+                remote: true,
+                html: { id: "create-question-comment-for-#{@question.id}", class: "comment-form" }) do |f|
+        div.form-group
+          =f.label :body, 'Comment:'
+          =f.text_area :body, size: "25x3", class: "form-control"
+        div.form-group
+          =f.submit 'Create comment', class: 'btn btn-default form-control'
+
 
 hr

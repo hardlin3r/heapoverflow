@@ -1,0 +1,12 @@
+<% publish_to "/questions/#{@commentable.question.id}/comments" do %>
+  <% if @commentable.comments.count == 1 %>
+    $('#the-answer-body-' + <%= @commentable.id %>)
+    .append('<h2>Comment:</h2><ul class="list-group answer-comments">\
+     <li class="list-group-item comment"><p><%= @comment.body %></p></li>\
+     </ul>');
+  <% else %>
+    $('#answer-' + <%= @commentable.id %> + ' .answer-comments').
+      append('<li class="list-group-item comment"><p><%= @comment.body %></p></li>');
+  <% end %>
+  $('form#create-comment-for-' + <%= @commentable.id %> + ' textarea').val('');
+<% end %>
