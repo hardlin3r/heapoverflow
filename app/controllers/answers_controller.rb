@@ -4,21 +4,21 @@ class AnswersController < ApplicationController
   before_action :load_question, only: [:create]
   before_action :load_answer, except: [:create]
 
+  respond_to :js
+
   def create
-    @answer = @question.answers.new(answer_params)
-    @answer.user = current_user
-    @answer.save
- end
+    respond_with(@answer = @question.answers.create(answer_params.merge(user: current_user)))
+  end
 
   def destroy
     if current_user.author_of?(@answer)
-      @answer.destroy
+      respond_with @answer.destroy
     end
   end
 
   def update
     @answer.update(answer_params)
-    @question = @answer.question
+    respond_with @answer
   end
 
   def set_best
@@ -31,6 +31,7 @@ class AnswersController < ApplicationController
 
   def load_answer
     @answer = Answer.find(params[:id])
+    @question = @answer.question
   end
 
   def load_question

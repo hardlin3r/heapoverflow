@@ -9,7 +9,7 @@ h2 Add new answer:
   div.field.form-group
     = f.label :body, "Your answer"
   div.field.form-group
-    = f.fields_for :attachments do |a|
+    = f.fields_for :attachments, @answer.attachments.build do |a|
       = render 'attachments/attachment_fields', f: a
     .links
       = link_to_add_association 'add attachment', f, :attachments, partial: 'attachments/attachment_fields'

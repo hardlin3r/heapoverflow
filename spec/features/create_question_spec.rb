@@ -15,7 +15,7 @@ I want to be able to ask questions
     fill_in 'Title', with: 'Test question'
     fill_in 'Body', with: 'text text text'
     click_on 'Create'
-    expect(page).to have_content 'Your question was created successfully'
+    expect(page).to have_content 'Question was successfully created'
     expect(page).to have_content 'Test question'
     expect(page).to have_content 'text text text'
   end

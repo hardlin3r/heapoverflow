@@ -2,32 +2,26 @@ class QuestionsController < ApplicationController
   include Voted
   before_action :authenticate_user!, except: [:index, :show]
   before_action :load_question, except: [:new, :index, :create]
+  before_action :build_answer, only: :show
+  after_action :publish_question, only: :create
+
   def new
-    @question = Question.new
-    @question.attachments.build
+    respond_with(@question = Question.new)
   end
 
   def index
-    @questions = Question.all
+    respond_with(@questions = Question.all)
   end
 
   def show
-    @answer = @question.answers.build
-    @answer.attachments.build
+    respond_with @question
   end
 
   def edit
   end
 
   def create
-    @question = Question.new(question_params)
-    @question.user = current_user
-    if @question.save
-      PrivatePub.publish_to "/questions/new",{ question: @question, question_url: question_url(@question) }
-      redirect_to @question, notice: "Your question was created successfully"
-    else
-      render :new, notice: "Title and cody should have length above 10 symbols!"
-    end
+    respond_with(@question = Question.create(question_params.merge(user: current_user)))
   end
 
   def update
@@ -38,9 +32,7 @@ class QuestionsController < ApplicationController
 
   def destroy
     if current_user.author_of?(@question)
-      @question.destroy
-      flash[:notice] = "Question was deleted successfully"
-      redirect_to questions_path
+      respond_with @question.destroy
     else
       flash[:alert] = "You cannot delete another user's question"
       redirect_to question_url(@question)
@@ -48,6 +40,14 @@ class QuestionsController < ApplicationController
   end
 
   private
+
+  def publish_question
+    PrivatePub.publish_to("/questions/new",{ question: @question, question_url: question_url(@question) }) if @question.valid?
+  end
+
+  def build_answer
+    @answer = @question.answers.build
+  end
 
   def load_question
     @question = Question.find(params[:id])

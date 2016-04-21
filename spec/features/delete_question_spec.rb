@@ -13,7 +13,7 @@ I can delete the quesiton
     sign_in(question.user)
     visit question_url(question)
     click_on 'Delete this question'
-    expect(page).to have_content 'Question was deleted successfully'
+    expect(page).to have_content 'Question was successfully destroyed'
     expect(page).to_not have_content question.title
     expect(current_path).to eq questions_path
   end
